@@ -11,7 +11,7 @@ export class LuckyComponent implements OnInit {
 
  public subscribersCount = 0;
  public number: number;
- public randomNumber = true;
+
 
  private luckySubscription$: Subscription;
 
@@ -23,10 +23,6 @@ export class LuckyComponent implements OnInit {
      console.log(`Retrieved lucky number ${this.number} for subscriber ${this.subscribersCount}`);
    });
   this.subscribersCount = this.luckyService.getSubscribersCount();
-
-  // setTimeout(() => {
-  //   this.randomNumber = false;
-  // }, 2000);
  }
 
 //   public ngOnDestroy(): void {
