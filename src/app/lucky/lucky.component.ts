@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { LuckyService } from '../lucky.service';
-import { Subscription } from 'rxjs';
+// import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-lucky',
@@ -9,24 +11,33 @@ import { Subscription } from 'rxjs';
 })
 export class LuckyComponent implements OnInit {
 
- public subscribersCount = 0;
- public number: number;
+  public number1: number;
+  public number2: number;
 
+  private onDestroy$: Subject<void> = new Subject<void>();
 
- private luckySubscription$: Subscription;
+  constructor(private luckyService: LuckyService) {}
 
- constructor(private luckyService: LuckyService) {}
+  public ngOnInit(): void {
+    const subscriberCount1 = this.luckyService.getSubscribersCount();
+    this.luckyService.getLuckyNumber()
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((luckyNumber: number) => {
+        this.number1 = luckyNumber;
+        console.log(`Retrieved lucky number ${this.number1} for subscriber ${subscriberCount1}`);
+    });
 
- public ngOnInit(): void {
-  this.luckySubscription$ = this.luckyService.getLuckyNumber().subscribe((luckyNumber: number) => {
-     this.number = luckyNumber;
-     console.log(`Retrieved lucky number ${this.number} for subscriber ${this.subscribersCount}`);
-   });
-  this.subscribersCount = this.luckyService.getSubscribersCount();
- }
+    const subscriberCount2 = this.luckyService.getSubscribersCount();
+    this.luckyService.getLuckyNumber()
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((luckyNumber: number) => {
+        this.number2 = luckyNumber;
+        console.log(`Retrieved lucky number ${this.number2} for subscriber ${subscriberCount2}`);
+    });
+  }
 
   public ngOnDestroy(): void {
-  this.luckySubscription$.unsubscribe();
-}
+    this.onDestroy$.next();
+  }
 
 }
