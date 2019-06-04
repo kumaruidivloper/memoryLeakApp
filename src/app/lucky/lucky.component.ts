@@ -25,8 +25,8 @@ export class LuckyComponent implements OnInit {
   this.subscribersCount = this.luckyService.getSubscribersCount();
  }
 
-//   public ngOnDestroy(): void {
-//   this.luckySubscription$.unsubscribe();
-// }
+  public ngOnDestroy(): void {
+  this.luckySubscription$.unsubscribe();
+}
 
 }
