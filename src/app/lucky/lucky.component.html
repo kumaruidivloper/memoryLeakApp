@@ -1,4 +1,4 @@
 <div class="container">
   <p>You are checking if you are lucky {{displayCount}} time</p>
-  <p>Your lucky number is: {{number}}</p>
+  <p>Your lucky number is: <span *ngIf="randomNumber">{{number}}</span></p>
 </div>
